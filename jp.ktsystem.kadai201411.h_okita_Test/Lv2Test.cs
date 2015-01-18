@@ -10,25 +10,25 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
     public class Lv2Test
     {
         //テストデータフォルダ
-        private static readonly string TEST_FOLDER = "../../../TestData/Lv.2/";
+        private static readonly string TEST_FOLDER = "..\\..\\..\\TestData\\Lv.2\\";
         //入力受注フォルダ名
-        private static readonly string INPUT_ORDER_FOLDER = "input/order";
+        private static readonly string INPUT_ORDER_FOLDER = "input\\order";
         //入力入金フォルダ名
-        private static readonly string INPUT_INCOME_FOLDER = "input/income";
+        private static readonly string INPUT_INCOME_FOLDER = "input\\income";
         //入力退避ファイル名
-        private static readonly string INPUT_RESERVATION = "input/reservation/reservation.dat";
+        private static readonly string INPUT_RESERVATION = "input\\reservation\\reservation.dat";
 
         //出力生産指示フォルダ名
-        private static readonly string OUTPUT_PRODUCT_FOLDER = "output/product";
+        private static readonly string OUTPUT_PRODUCT_FOLDER = "output\\product";
         //出力バックアップフォルダ名
-        private static readonly string OUTPUT_BACKUP_FOLDER = "output/backup";
+        private static readonly string OUTPUT_BACKUP_FOLDER = "output\\backup";
 
         //比較対象生産指示フォルダ名
-        private static readonly string EXPECTED_PRODUCT_FOLDER = "expected/product";
+        private static readonly string EXPECTED_PRODUCT_FOLDER = "expected\\product";
         //比較対象バックアップフォルダ名
-        private static readonly string EXPECTED_BACKUP_FOLDER = "expected/backup";
+        private static readonly string EXPECTED_BACKUP_FOLDER = "expected\\backup";
         //比較対象退避ファイル
-        private static readonly string EXPECTED_RESERVATION_FOLDER = "expected/reservation/reservation.dat";
+        private static readonly string EXPECTED_RESERVATION_FOLDER = "expected\\reservation\\reservation.dat";
 
         //出力ファイル名
         private static readonly string OUTPUT_FILE_NAME = "productorder.out";
@@ -39,28 +39,28 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2N001()
         {
-            string path = TEST_FOLDER + "001/";
+            string path = TEST_FOLDER + "001\\";
             AssertEquals(path, 0);
         }
 
         [TestMethod]
         public void Lv2N002()
         {
-            string path = TEST_FOLDER + "002/";
+            string path = TEST_FOLDER + "002\\";
             AssertEquals(path, 0);
         }
 
         [TestMethod]
         public void Lv2N003()
         {
-            string path = TEST_FOLDER + "003/";
+            string path = TEST_FOLDER + "003\\";
             AssertEquals(path, 5);
         }
 
         [TestMethod]
         public void Lv2E101()
         {
-            string path = TEST_FOLDER + "101/";
+            string path = TEST_FOLDER + "101\\";
             //入金情報
             string incomeDir = path + INPUT_INCOME_FOLDER;
             //生産指示
@@ -74,7 +74,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E102()
         {
-            string path = TEST_FOLDER + "102/";
+            string path = TEST_FOLDER + "102\\";
             //入金情報
             string incomeDir = path + INPUT_INCOME_FOLDER;
             //生産指示
@@ -88,7 +88,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E103()
         {
-            string path = TEST_FOLDER + "103/";
+            string path = TEST_FOLDER + "103\\";
             //受注情報
             string orderDir = path + "Dummiy";
             //入金情報
@@ -104,7 +104,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E104()
         {
-            string path = TEST_FOLDER + "104/";
+            string path = TEST_FOLDER + "104\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -120,7 +120,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E105()
         {
-            string path = TEST_FOLDER + "105/";
+            string path = TEST_FOLDER + "105\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -136,7 +136,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E106()
         {
-            string path = TEST_FOLDER + "106/";
+            string path = TEST_FOLDER + "106\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -152,7 +152,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E107()
         {
-            string path = TEST_FOLDER + "107/";
+            string path = TEST_FOLDER + "107\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -168,7 +168,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E108()
         {
-            string path = TEST_FOLDER + "108/";
+            string path = TEST_FOLDER + "108\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -184,7 +184,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E109()
         {
-            string path = TEST_FOLDER + "109/";
+            string path = TEST_FOLDER + "109\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -200,7 +200,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E110()
         {
-            string path = TEST_FOLDER + "110/";
+            string path = TEST_FOLDER + "110\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -216,7 +216,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E111()
         {
-            string path = TEST_FOLDER + "111/";
+            string path = TEST_FOLDER + "111\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //生産指示
@@ -230,7 +230,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E112()
         {
-            string path = TEST_FOLDER + "112/";
+            string path = TEST_FOLDER + "112\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //生産指示
@@ -244,7 +244,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E113()
         {
-            string path = TEST_FOLDER + "113/";
+            string path = TEST_FOLDER + "113\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -260,7 +260,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E114()
         {
-            string path = TEST_FOLDER + "114/";
+            string path = TEST_FOLDER + "114\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -276,7 +276,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E115()
         {
-            string path = TEST_FOLDER + "115/";
+            string path = TEST_FOLDER + "115\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -292,7 +292,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E116()
         {
-            string path = TEST_FOLDER + "116/";
+            string path = TEST_FOLDER + "116\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -308,7 +308,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E117()
         {
-            string path = TEST_FOLDER + "117/";
+            string path = TEST_FOLDER + "117\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -324,7 +324,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E118()
         {
-            string path = TEST_FOLDER + "118/";
+            string path = TEST_FOLDER + "118\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -338,7 +338,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E119()
         {
-            string path = TEST_FOLDER + "119/";
+            string path = TEST_FOLDER + "119\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -352,7 +352,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E120()
         {
-            string path = TEST_FOLDER + "120/";
+            string path = TEST_FOLDER + "120\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -368,7 +368,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E121()
         {
-            string path = TEST_FOLDER + "121/";
+            string path = TEST_FOLDER + "121\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -384,7 +384,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E122()
         {
-            string path = TEST_FOLDER + "122/";
+            string path = TEST_FOLDER + "122\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -400,7 +400,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E123()
         {
-            string path = TEST_FOLDER + "123/";
+            string path = TEST_FOLDER + "123\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -414,7 +414,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E124()
         {
-            string path = TEST_FOLDER + "124/";
+            string path = TEST_FOLDER + "124\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -428,7 +428,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv2E125()
         {
-            string path = TEST_FOLDER + "125/";
+            string path = TEST_FOLDER + "125\\";
             //受注情報
             string orderDir = path + INPUT_ORDER_FOLDER;
             //入金情報
@@ -457,7 +457,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
                 {
                     Directory.CreateDirectory(@reservationDir);
                 }
-                string reservationPath = reservationDir + "/" + RESERVATION_FILE_NAME;
+                string reservationPath = reservationDir + "\\" + RESERVATION_FILE_NAME;
                 File.Copy(@inputReservation, @reservationPath, true);
             }
             else
@@ -467,7 +467,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
                 {
                     Directory.CreateDirectory(@reservationDir);
                 }
-                string reservationPath = reservationDir + "/" + RESERVATION_FILE_NAME;
+                string reservationPath = reservationDir + "\\" + RESERVATION_FILE_NAME;
                 if (File.Exists(reservationPath))
                 {
                     File.Delete(@reservationPath);
@@ -492,7 +492,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
             {
                 string fileName = Path.GetFileName(failPath);
                 //ファイルのコピー
-                File.Copy(@failPath, @orderDir + "/" + fileName, true);
+                File.Copy(@failPath, @orderDir + "\\" + fileName, true);
             }
 
             if (returnNo != result)
@@ -500,14 +500,14 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
                 Assert.Fail(string.Format("戻り値は{0}であることが期待されましたが{1}が返されました。", returnNo, result));
             }
 
-            string anOutputProductFilePath = productDir + "/" + OUTPUT_FILE_NAME;
+            string anOutputProductFilePath = productDir + "\\" + OUTPUT_FILE_NAME;
             if (!File.Exists(@anOutputProductFilePath))
             {
                 Assert.Fail("出力ファイルが存在しませんでした。");
             }
 
             //生産指示ファイル比較
-            string anExpextedProductFilePath = testFolderDir + EXPECTED_PRODUCT_FOLDER + "/" + OUTPUT_FILE_NAME;
+            string anExpextedProductFilePath = testFolderDir + EXPECTED_PRODUCT_FOLDER + "\\" + OUTPUT_FILE_NAME;
             FileStream fs1 = new FileStream(@anOutputProductFilePath, FileMode.Open);
             FileStream fs2 = new FileStream(@anExpextedProductFilePath, FileMode.Open);
             int byte1;
@@ -592,7 +592,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
 
             //退避ファイル比較
             string exReservation = testFolderDir + EXPECTED_RESERVATION_FOLDER;
-            string reservation = Kadai.GetReservationFileDir() + "/" + RESERVATION_FILE_NAME;
+            string reservation = Kadai.GetReservationFileDir() + "\\" + RESERVATION_FILE_NAME;
 
             if (!File.Exists(exReservation))
             {

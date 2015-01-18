@@ -9,7 +9,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
     public class Lv1Test
     {
         //テストデータフォルダ
-        private static readonly string TEST_FOLDER_PATH = "../../../TestData/Lv.1/";
+        private static readonly string TEST_FOLDER_PATH = "..\\..\\..\\TestData\\Lv.1\\";
         //入力フォルダ名
         private static readonly string INPUT_FOLDER_NAME = "input";
         //出力フォルダ名
@@ -23,7 +23,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1N001()
         {
-            string path = TEST_FOLDER_PATH + "001/";
+            string path = TEST_FOLDER_PATH + "001\\";
             AssertEquals(path, 0);
         }
 
@@ -31,21 +31,21 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1N002()
         {
-            string path = TEST_FOLDER_PATH + "002/";
+            string path = TEST_FOLDER_PATH + "002\\";
             AssertEquals(path, 0);
         }
 
         [TestMethod]
         public void Lv1N003()
         {
-            string path = TEST_FOLDER_PATH + "003/";
+            string path = TEST_FOLDER_PATH + "003\\";
             AssertEquals(path, 4);
         }
 
         [TestMethod]
         public void Lv1E101()
         {
-            string path = TEST_FOLDER_PATH + "101/";
+            string path = TEST_FOLDER_PATH + "101\\";
             //出力フォルダ
             string outputDir = path + OUTPUT_FOLDER_NAME;
 
@@ -55,7 +55,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E102()
         {
-            string path = TEST_FOLDER_PATH + "102/";
+            string path = TEST_FOLDER_PATH + "102\\";
             //出力フォルダ
             string outputDir = path + OUTPUT_FOLDER_NAME;
 
@@ -65,7 +65,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E103()
         {
-            string path = TEST_FOLDER_PATH + "103/";
+            string path = TEST_FOLDER_PATH + "103\\";
             //受注フォルダ
             string orderDir = path + "dummy";
             //出力フォルダ
@@ -77,7 +77,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E104()
         {
-            string path = TEST_FOLDER_PATH + "104/";
+            string path = TEST_FOLDER_PATH + "104\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -89,7 +89,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E105()
         {
-            string path = TEST_FOLDER_PATH + "105/";
+            string path = TEST_FOLDER_PATH + "105\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -101,7 +101,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E106()
         {
-            string path = TEST_FOLDER_PATH + "106/";
+            string path = TEST_FOLDER_PATH + "106\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -113,7 +113,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E107()
         {
-            string path = TEST_FOLDER_PATH + "107/";
+            string path = TEST_FOLDER_PATH + "107\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -125,7 +125,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E108()
         {
-            string path = TEST_FOLDER_PATH + "108/";
+            string path = TEST_FOLDER_PATH + "108\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -137,7 +137,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E109()
         {
-            string path = TEST_FOLDER_PATH + "109/";
+            string path = TEST_FOLDER_PATH + "109\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -149,7 +149,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E110()
         {
-            string path = TEST_FOLDER_PATH + "110/";
+            string path = TEST_FOLDER_PATH + "110\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -161,7 +161,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E111()
         {
-            string path = TEST_FOLDER_PATH + "111/";
+            string path = TEST_FOLDER_PATH + "111\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
 
@@ -171,7 +171,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E112()
         {
-            string path = TEST_FOLDER_PATH + "112/";
+            string path = TEST_FOLDER_PATH + "112\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
 
@@ -181,7 +181,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         [TestMethod]
         public void Lv1E113()
         {
-            string path = TEST_FOLDER_PATH + "113/";
+            string path = TEST_FOLDER_PATH + "113\\";
             //受注フォルダ
             string orderDir = path + INPUT_FOLDER_NAME;
             //出力フォルダ
@@ -268,7 +268,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
                 Assert.Fail(string.Format("戻り値は{0}であることが期待されましたが{1}が返されました。", returnNo, result));
             }
 
-            string anOutputFilePath = outputDir + "/" + OUTPUT_FILE_NAME;
+            string anOutputFilePath = outputDir + "\\" + OUTPUT_FILE_NAME;
             if (File.Exists(anOutputFilePath))
             {
                 Assert.Fail("出力ファイルが存在します。");
