@@ -301,6 +301,13 @@ namespace jp.ktsystem.kadai201411.h_okita
                         {
                             //ファイルから一行読み込む
                             string line = sr.ReadLine();
+
+                            // UTF8コードチェック
+                            if (!IsUTF8Code(line))
+                            {
+                                throw new CustomException(Constants.INPUT_ERROR_OF_ORDER_FILE);
+                            }
+
                             //読み込んだ一行をカンマ毎に分けて配列に格納する
                             string[] values = line.Split(',');
 
@@ -442,6 +449,13 @@ namespace jp.ktsystem.kadai201411.h_okita
                 {
                     //ファイルから一行読み込む
                     string line = sr.ReadLine();
+
+                    // UTF8コードチェック
+                    if (!IsUTF8Code(line))
+                    {
+                        throw new CustomException(Constants.INPUT_ERROR_OF_INCOME_FILE);
+                    }
+
                     //読み込んだ一行をカンマ毎に分けて配列に格納する
                     string[] values = line.Split(',');
 
@@ -750,6 +764,142 @@ namespace jp.ktsystem.kadai201411.h_okita
             {
                 _errorNo = errorNo;
             }
+        }
+
+        /// <summary>
+        /// 文字列が制御文字以外のUTF8コードのみで作成されているかどうかを判定する
+        /// </summary>
+        /// <param name="str">判定する文字列</param>
+        /// <returns>UTF8コードのみ：true、それ以外：false</returns>
+        private static bool IsUTF8Code(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return true;
+            }
+
+            byte[] data = ENCODING.GetBytes(str);
+            for(int i = 0; i < data.Count(); i++)
+            {
+                byte firstB = data[i];
+
+                if (0x00 <= firstB && 0x7f >= firstB)
+                {
+                    // 1バイト文字
+
+                    // 1バイト制御文字
+                    if ((0x00 <= firstB && 0x1f >= firstB) || (0x7F == firstB))
+                    {
+                        return false;
+                    }
+                }
+                else if ((0xc0 <= firstB && 0xcf >= firstB) || (0xd0 <= firstB && 0xdf >= firstB))
+                {
+                    // 2バイト文字
+                    if (i >= data.Count() - 1)
+                    {
+                        return false;
+                    }
+                    i++;
+                    byte secondB = data[i];
+                    // 2バイト制御文字
+                    if (0xc2 == firstB)
+                    {
+                        if (0x80 <= secondB && 0xcf >= 0xa0)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (!IsUTF8CodeAfterFirstByte(secondB))
+                    {
+                        return false;
+                    }
+                }
+                else if (0xe0 <= firstB && 0xef >= firstB)
+                {
+                    // 3バイト文字
+                    if (i >= data.Count() - 2)
+                    {
+                        return false;
+                    }
+
+                    for (int j = 0; j < 2; j++)
+                    {
+                        i++;
+                        if (!IsUTF8CodeAfterFirstByte(data[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (0xf0 <= firstB && 0xf7 >= firstB)
+                {
+                    // 4バイト文字
+                    if (i >= data.Count() - 3)
+                    {
+                        return false;
+                    }
+
+                    for (int j = 0; j < 3; j++)
+                    {
+                        i++;
+                        if (!IsUTF8CodeAfterFirstByte(data[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (0xf8 <= firstB && 0xfb >= firstB)
+                {
+                    // 5バイト文字
+                    if (i >= data.Count() - 4)
+                    {
+                        return false;
+                    }
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        i++;
+                        if (!IsUTF8CodeAfterFirstByte(data[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (0xfc <= firstB && 0xff >= firstB)
+                {
+                    // 6バイト文字
+                    if (i >= data.Count() - 5)
+                    {
+                        return false;
+                    }
+
+                    for (int j = 0; j < 5; j++)
+                    {
+                        i++;
+                        if (!IsUTF8CodeAfterFirstByte(data[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 多バイト文字の２バイト目以降のバイトかどうか判定する
+        /// </summary>
+        /// <param name="b">判定するバイト</param>
+        /// <returns>多バイト文字の２バイト目以降のバイト：true、それ以外：false</returns>
+        private static bool IsUTF8CodeAfterFirstByte(byte b)
+        {
+            return ((0x80 <= b && 0x8f >= b) || (0x90 <= b && 0x9f >= b) || (0xa0 <= b && 0xaf >= b) || (0xb0 <= b && 0xbf >= b));
         }
     }
 }
