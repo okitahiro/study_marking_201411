@@ -26,21 +26,29 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>退避ファイル名</summary>
         private static readonly string RESERVATION_FILE_NAME = "reservation.dat";
 
-        /// <summary>受注情報ファイルの受注IDインデックス</summary>
-        private static readonly int ID_INDEX_OF_ORDER_FILE = 0;
-        /// <summary>受注情報ファイルの顧客名インデックス</summary>
-        private static readonly int CYSTOMER_NAME_INDEX_OF_ORDER_FILE = 1;
-        /// <summary>受注情報ファイルの製品名インデックス</summary>
-        private static readonly int PRODUCT_NAME_INDEX_OF_ORDER_FILE = 2;
-        /// <summary>受注情報ファイルの数量インデックス</summary>
-        private static readonly int QUANTITY_INDEX_OF_ORDER_FILE = 3;
-        /// <summary>受注情報ファイルの納期インデックス</summary>
-        private static readonly int DELIVERY_DATE_OF_ORDER_FILE = 4;
+        /// <summary>受注情報ファイルのインデックス</summary>
+        private enum OrderIndex
+        {
+            /// <summary>ID</summary>
+            ID = 0,
+            /// <summary>顧客名</summary>
+            CYSTOMER_NAM = 1,
+            /// <summary>製品名</summary>
+            PRODUCT_NAME = 2,
+            /// <summary>数量</summary>
+            QUANTITY = 3,
+            /// <summary>納期</summary>
+            DELIVERY_DATE = 4
+        }
 
-        /// <summary>入金情報ファイルの受注IDインデックス</summary>
-        private static readonly int ID_INDEX_OF_INCOME_FILE = 0;
-        /// <summary>入金情報ファイルの入金日時インデックス</summary>
-        private static readonly int DESPOSIT_DATE_INDEX_OF_INCOME_FILE = 1;
+        /// <summary>入金情報ファイルのインデックス</summary>
+        private enum IncomeIndex
+        {
+            /// <summary>受注ID</summary>
+            ID = 0,
+            /// <summary>入金日時</summary>
+            DESPOSIT_DATE = 1
+        }
 
         /// <summary>受注情報ファイルの納期フォーマット</summary>
         private static readonly string DELIVERY_OF_ORDER_FORMAT = "yyyyMMdd";
@@ -60,23 +68,23 @@ namespace jp.ktsystem.kadai201411.h_okita
         public static int CountOrder(string anOrderFileDir, string anOutputDir)
         {
             //受注情報ファイル入力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(anOrderFileDir) || !Directory.Exists(@anOrderFileDir))
+            if (string.IsNullOrEmpty(anOrderFileDir) || !Directory.Exists(anOrderFileDir))
             {
-                return Constants.INPUT_ERROR_OF_ORDER_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE;
             }
 
             //出力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(anOutputDir) || !Directory.Exists(@anOutputDir))
+            if (string.IsNullOrEmpty(anOutputDir) || !Directory.Exists(anOutputDir))
             {
-                return Constants.OUTPUT_ERROR_OF_FIRST_QUESTION;
+                return (int)Constants.ErrorCode.OUTPUT_ERROR_OF_FIRST_QUESTION;
             }
 
             //受注情報のリスト
-            List<OrderFileDataMolde> orderDataList = null;
+            List<OrderFileDataModel> orderDataList = null;
             try
             {
                 //入力フォルダ内のファイル一覧取得
-                List<string> inputFiles = Directory.GetFiles(@anOrderFileDir, "order*.txt", System.IO.SearchOption.TopDirectoryOnly).ToList();
+                List<string> inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
                 inputFiles.Sort(StringComparer.InvariantCulture);
 
@@ -85,11 +93,11 @@ namespace jp.ktsystem.kadai201411.h_okita
             }
             catch (CustomException ce)
             {
-                return ce.ErrorNo;
+                return (int)ce.ErrorNo;
             }
             catch
             {
-                return Constants.INPUT_ERROR_OF_ORDER_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE;
             }
 
             //受注情報データから、製品名ごとに数量を集計する
@@ -97,12 +105,12 @@ namespace jp.ktsystem.kadai201411.h_okita
 
             try
             {
-                OutputOrderCount(outPutData, Path.Combine(@anOutputDir, OUTPUT_FILE_NAME));
+                OutputOrderCount(outPutData, Path.Combine(anOutputDir, OUTPUT_FILE_NAME));
 
             }
             catch
             {
-                return Constants.OUTPUT_ERROR_OF_FIRST_QUESTION;
+                return (int)Constants.ErrorCode.OUTPUT_ERROR_OF_FIRST_QUESTION;
             }
 
             return outPutData.Count;
@@ -119,39 +127,39 @@ namespace jp.ktsystem.kadai201411.h_okita
         public static int createProductOrder(String anOrderFileDir, String anIncomeFileDir, String anOutputDir, String aBackupDir)
         {
             //受注情報ファイル入力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(anOrderFileDir) || !Directory.Exists(@anOrderFileDir))
+            if (string.IsNullOrEmpty(anOrderFileDir) || !Directory.Exists(anOrderFileDir))
             {
-                return Constants.INPUT_ERROR_OF_ORDER_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE;
             }
 
             //入金情報ファイル出力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(anIncomeFileDir) || !Directory.Exists(@anIncomeFileDir))
+            if (string.IsNullOrEmpty(anIncomeFileDir) || !Directory.Exists(anIncomeFileDir))
             {
-                return Constants.INPUT_ERROR_OF_INCOME_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_INCOME_FILE;
             }
 
             //出力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(anOutputDir) || !Directory.Exists(@anOutputDir))
+            if (string.IsNullOrEmpty(anOutputDir) || !Directory.Exists(anOutputDir))
             {
-                return Constants.OUTPUT_ERROR_OF_PRODUCT_ORDER_FILE;
+                return (int)Constants.ErrorCode.OUTPUT_ERROR_OF_PRODUCT_ORDER_FILE;
             }
 
             //バックアップファイル出力ディレクトリの存在チェック
-            if (string.IsNullOrEmpty(aBackupDir) || !Directory.Exists(@aBackupDir))
+            if (string.IsNullOrEmpty(aBackupDir) || !Directory.Exists(aBackupDir))
             {
-                return Constants.ERROR_OF_BACKUP;
+                return (int)Constants.ErrorCode.ERROR_OF_BACKUP;
             }
 
             //受注情報フォルダ内の受注情報ファイル一覧
             List<string> inputFiles = null;
             //受注情報のリスト
-            List<OrderFileDataMolde> orderDataList = null;
+            List<OrderFileDataModel> orderDataList = null;
             //入力退避ファイル存在フラグ
             bool existsReservation = false;
             try
             {
                 //受注情報フォルダ内の受注情報ファイル一覧取得
-                inputFiles = Directory.GetFiles(@anOrderFileDir, "order*.txt", System.IO.SearchOption.TopDirectoryOnly).ToList();
+                inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
                 inputFiles.Sort(StringComparer.InvariantCulture);
 
@@ -169,15 +177,15 @@ namespace jp.ktsystem.kadai201411.h_okita
             }
             catch (CustomException ce)
             {
-                return ce.ErrorNo;
+                return (int)ce.ErrorNo;
             }
             catch
             {
-                return Constants.INPUT_ERROR_OF_ORDER_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE;
             }
 
             //入金ファイルパス
-            string incomeFilePath = Path.Combine(@anIncomeFileDir, INCOME_FILE_NAME);
+            string incomeFilePath = Path.Combine(anIncomeFileDir, INCOME_FILE_NAME);
             //入金情報のリストを取得
             List<IncomeFileDataModel> incomeDataList = null;
             try
@@ -186,11 +194,11 @@ namespace jp.ktsystem.kadai201411.h_okita
             }
             catch (CustomException ce)
             {
-                return ce.ErrorNo;
+                return (int)ce.ErrorNo;
             }
             catch
             {
-                return Constants.INPUT_ERROR_OF_INCOME_FILE;
+                return (int)Constants.ErrorCode.INPUT_ERROR_OF_INCOME_FILE;
             }
 
             //入金情報マップ作成
@@ -206,11 +214,11 @@ namespace jp.ktsystem.kadai201411.h_okita
             try
             {
                 //生産指示出力
-                OututProductOrderFile(resultData.OutputProductionDataList, Path.Combine(@anOutputDir, PRODUCT_ORDER_FILE_NAME));
+                OututProductOrderFile(resultData.OutputProductionDataList, Path.Combine(anOutputDir, PRODUCT_ORDER_FILE_NAME));
             }
             catch
             {
-                return Constants.OUTPUT_ERROR_OF_PRODUCT_ORDER_FILE;
+                return (int)Constants.ErrorCode.OUTPUT_ERROR_OF_PRODUCT_ORDER_FILE;
             }
 
             //退避ディレクトリが存在しない場合、フォルダ作成
@@ -229,7 +237,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 }
                 catch
                 {
-                    return Constants.OUTPUT_ERROR_OF_RESERVATION_FILE;
+                    return (int)Constants.ErrorCode.OUTPUT_ERROR_OF_RESERVATION_FILE;
                 }
             }
 
@@ -241,11 +249,11 @@ namespace jp.ktsystem.kadai201411.h_okita
 
             try
             {
-                MoveFiles(inputFiles, @aBackupDir);
+                MoveFiles(inputFiles, aBackupDir);
             }
             catch
             {
-                return Constants.ERROR_OF_BACKUP;
+                return (int)Constants.ErrorCode.ERROR_OF_BACKUP;
             }
 
             //出力した生産指示レコード数を返す
@@ -259,7 +267,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         public static string GetReservationFileDir()
         {
             //現在作業ディレクトリ
-            string currentPath = System.IO.Directory.GetCurrentDirectory();
+            string currentPath = Directory.GetCurrentDirectory();
             return Path.Combine(currentPath, RESERVATION_FOLDER_NAME);
         }
 
@@ -283,10 +291,10 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <param name="files">受注情報ファイルパスのリスト</param>
         /// <param name="existsReservation">退避ファイル存在フラグ</param>
         /// <returns>受注情報のリスト</returns>
-        private static List<OrderFileDataMolde> GetOrderFileData(List<string> files, bool existsReservation)
+        private static List<OrderFileDataModel> GetOrderFileData(List<string> files, bool existsReservation)
         {
             //受注情報のリスト
-            List<OrderFileDataMolde> orderDataList = new List<OrderFileDataMolde>();
+            List<OrderFileDataModel> orderDataList = new List<OrderFileDataModel>();
 
             int i = 0;
             try
@@ -294,7 +302,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 //ファイル読み込み
                 for (i = 0; i < files.Count; i++)
                 {
-                    using (StreamReader sr = new StreamReader(@files[i], ENCODING))
+                    using (StreamReader sr = new StreamReader(files[i], ENCODING))
                     {
                         //ストリームの末尾まで繰り返す
                         while (!sr.EndOfStream)
@@ -307,43 +315,43 @@ namespace jp.ktsystem.kadai201411.h_okita
                             //フィールド数のチェック
                             if (5 != values.Length)
                             {
-                                throw new CustomException(Constants.FORMAT_ERROR_OF_ORDER_FILE);
+                                throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_ORDER_FILE);
                             }
 
                             //必須フィールドの入力チェック
-                            if (string.IsNullOrEmpty(values[ID_INDEX_OF_ORDER_FILE]) || string.IsNullOrEmpty(values[CYSTOMER_NAME_INDEX_OF_ORDER_FILE]) ||
-                                string.IsNullOrEmpty(values[PRODUCT_NAME_INDEX_OF_ORDER_FILE]) || string.IsNullOrEmpty(values[QUANTITY_INDEX_OF_ORDER_FILE]))
+                            if (string.IsNullOrEmpty(values[(int)OrderIndex.ID]) || string.IsNullOrEmpty(values[(int)OrderIndex.CYSTOMER_NAM]) ||
+                                string.IsNullOrEmpty(values[(int)OrderIndex.PRODUCT_NAME]) || string.IsNullOrEmpty(values[(int)OrderIndex.QUANTITY]))
                             {
-                                throw new CustomException(Constants.FORMAT_ERROR_OF_ORDER_FILE);
+                                throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_ORDER_FILE);
                             }
 
                             //数量フィールドが半角数字のみで入力されているかのチェック
-                            if (!IsHalfNumber(values[QUANTITY_INDEX_OF_ORDER_FILE]))
+                            if (!IsHalfNumber(values[(int)OrderIndex.QUANTITY]))
                             {
-                                throw new CustomException(Constants.FORMAT_ERROR_OF_ORDER_FILE);
+                                throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_ORDER_FILE);
                             }
 
                             //納期のチェック
-                            if (string.Empty != values[DELIVERY_DATE_OF_ORDER_FILE])
+                            if (string.Empty != values[(int)OrderIndex.DELIVERY_DATE])
                             {
                                 //納期の日付フォーマットチェック
-                                if (!Regex.IsMatch(values[DELIVERY_DATE_OF_ORDER_FILE], DELIVERY_OF_ORDER_REG_FORMAT))
+                                if (!Regex.IsMatch(values[(int)OrderIndex.DELIVERY_DATE], DELIVERY_OF_ORDER_REG_FORMAT))
                                 {
-                                    throw new CustomException(Constants.FORMAT_ERROR_OF_ORDER_FILE);
+                                    throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_ORDER_FILE);
                                 }
                                 //納期の日付チェック
                                 DateTime date;
-                                if (!DateTime.TryParseExact(values[DELIVERY_DATE_OF_ORDER_FILE], DELIVERY_OF_ORDER_FORMAT,
+                                if (!DateTime.TryParseExact(values[(int)OrderIndex.DELIVERY_DATE], DELIVERY_OF_ORDER_FORMAT,
                                     System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None, out date))
                                 {
-                                    throw new CustomException(Constants.FORMAT_ERROR_OF_ORDER_FILE);
+                                    throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_ORDER_FILE);
                                 }
                             }
 
                             //受注情報モデルの作成
-                            OrderFileDataMolde dataModel = new OrderFileDataMolde(values[ID_INDEX_OF_ORDER_FILE],
-                                values[CYSTOMER_NAME_INDEX_OF_ORDER_FILE], values[PRODUCT_NAME_INDEX_OF_ORDER_FILE],
-                                int.Parse(values[QUANTITY_INDEX_OF_ORDER_FILE]), values[DELIVERY_DATE_OF_ORDER_FILE]);
+                            OrderFileDataModel dataModel = new OrderFileDataModel(values[(int)OrderIndex.ID],
+                                values[(int)OrderIndex.CYSTOMER_NAM], values[(int)OrderIndex.PRODUCT_NAME],
+                                int.Parse(values[(int)OrderIndex.QUANTITY]), values[(int)OrderIndex.DELIVERY_DATE]);
 
                             int index = orderDataList.BinarySearch(dataModel);
 
@@ -372,11 +380,11 @@ namespace jp.ktsystem.kadai201411.h_okita
             {
                 if (existsReservation && 0 == i)
                 {
-                    throw new CustomException(Constants.INPUT_ERROR_OF_RESERVATION_FILE);
+                    throw new CustomException(Constants.ErrorCode.INPUT_ERROR_OF_RESERVATION_FILE);
                 }
                 else
                 {
-                    throw new CustomException(Constants.INPUT_ERROR_OF_ORDER_FILE);
+                    throw new CustomException(Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE);
                 }
             }
 
@@ -388,7 +396,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// </summary>
         /// <param name="orderDataList">受注情報のリスト</param>
         /// <param name="anOutputDir">出力ファイルパス</param>
-        private static Dictionary<string, int> GetTotalProductionsQuantity(List<OrderFileDataMolde> orderDataList)
+        private static Dictionary<string, int> GetTotalProductionsQuantity(List<OrderFileDataModel> orderDataList)
         {
             //集計後のデータ
             Dictionary<string, int> returnData = new Dictionary<string, int>();
@@ -448,30 +456,30 @@ namespace jp.ktsystem.kadai201411.h_okita
                     //フィールド数のチェック
                     if (2 != values.Length)
                     {
-                        throw new CustomException(Constants.FORMAT_ERROR_OF_INCOME_FILE);
+                        throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_INCOME_FILE);
                     }
 
                     //必須フィールドの入力チェック
-                    if (string.IsNullOrEmpty(values[ID_INDEX_OF_INCOME_FILE]) || string.IsNullOrEmpty(values[DESPOSIT_DATE_INDEX_OF_INCOME_FILE]))
+                    if (string.IsNullOrEmpty(values[(int)IncomeIndex.ID]) || string.IsNullOrEmpty(values[(int)IncomeIndex.DESPOSIT_DATE]))
                     {
-                        throw new CustomException(Constants.FORMAT_ERROR_OF_INCOME_FILE);
+                        throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_INCOME_FILE);
                     }
 
                     //入金日時のフォーマットチェック
-                    if (!Regex.IsMatch(values[DESPOSIT_DATE_INDEX_OF_INCOME_FILE], DESPOSIT_OF_INCOME_REG_FORMAT))
+                    if (!Regex.IsMatch(values[(int)IncomeIndex.DESPOSIT_DATE], DESPOSIT_OF_INCOME_REG_FORMAT))
                     {
-                        throw new CustomException(Constants.FORMAT_ERROR_OF_INCOME_FILE);
+                        throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_INCOME_FILE);
                     }
                     //入金日時のDateTime変換
                     DateTime despositDate;
-                    if (!DateTime.TryParseExact(values[DESPOSIT_DATE_INDEX_OF_INCOME_FILE], DESPOSIT_OF_INCOME_FORMAT,
+                    if (!DateTime.TryParseExact(values[(int)IncomeIndex.DESPOSIT_DATE], DESPOSIT_OF_INCOME_FORMAT,
                         System.Globalization.DateTimeFormatInfo.InvariantInfo, System.Globalization.DateTimeStyles.None, out despositDate))
                     {
-                        throw new CustomException(Constants.FORMAT_ERROR_OF_INCOME_FILE);
+                        throw new CustomException(Constants.ErrorCode.FORMAT_ERROR_OF_INCOME_FILE);
                     }
 
                     //入金情報モデルの作成
-                    IncomeFileDataModel dataModel = new IncomeFileDataModel(values[ID_INDEX_OF_INCOME_FILE], despositDate);
+                    IncomeFileDataModel dataModel = new IncomeFileDataModel(values[(int)IncomeIndex.ID], despositDate);
 
                     int index = incomeDataList.BinarySearch(dataModel);
                     if (0 > index)
@@ -499,16 +507,16 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <param name="orderData">受注情報</param>
         /// <param name="incomeDataMap">入金情報</param>
         /// <returns>生産指示情報及び、生産指示ファイルに出力しなかった受注情報</returns>
-        private static ProductAndUnoutputOrderDataModel GetProductDataAndUnOutputOrderData(List<OrderFileDataMolde> orderDataList, Dictionary<string, DateTime> incomeDataMap)
+        private static ProductAndUnoutputOrderDataModel GetProductDataAndUnOutputOrderData(List<OrderFileDataModel> orderDataList, Dictionary<string, DateTime> incomeDataMap)
         {
-            List<ProductFileDataModle> productDataList = new List<ProductFileDataModle>();
-            List<OrderFileDataMolde> unoutputOrderDataList = new List<OrderFileDataMolde>();
+            List<ProductFileDataModel> productDataList = new List<ProductFileDataModel>();
+            List<OrderFileDataModel> unoutputOrderDataList = new List<OrderFileDataModel>();
 
-            foreach (OrderFileDataMolde order in orderDataList)
+            foreach (OrderFileDataModel order in orderDataList)
             {
                 if (incomeDataMap.ContainsKey(order.Id))
                 {
-                    productDataList.Add(new ProductFileDataModle(order.Id, order.CustomerName,
+                    productDataList.Add(new ProductFileDataModel(order.Id, order.CustomerName,
                         order.ProductionName, order.Quantity, order.DateOfDelivery, incomeDataMap[order.Id]));
                 }
                 else
@@ -517,7 +525,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 }
             }
 
-            productDataList.Sort(new ProductFileDataModleComparer());
+            productDataList.Sort(new ProductFileDataModelComparer());
 
             return new ProductAndUnoutputOrderDataModel(productDataList, unoutputOrderDataList);
         }
@@ -527,11 +535,11 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// </summary>
         /// <param name="orderFileDataList">受注情報データリスト</param>
         /// <param name="anOutputPath">出力ファイルパス</param>
-        private static void OututProductOrderFile(List<ProductFileDataModle> productDataList, string anOutputPath)
+        private static void OututProductOrderFile(List<ProductFileDataModel> productDataList, string anOutputPath)
         {
-            using (StreamWriter sr = new StreamWriter(@anOutputPath, false, ENCODING))
+            using (StreamWriter sr = new StreamWriter(anOutputPath, false, ENCODING))
             {
-                foreach (ProductFileDataModle dataModel in productDataList)
+                foreach (ProductFileDataModel dataModel in productDataList)
                 {
                     sr.WriteLine(string.Format("{0},{1},{2},{3},{4},{5}",
                         dataModel.Id, dataModel.CustomerName, dataModel.ProductionName, dataModel.Quantity,
@@ -545,11 +553,11 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// </summary>
         /// <param name="outPutDataList">受注情報のリスト</param>
         /// <param name="anOutputPath">出力ファイルパス</param>
-        private static void OutPutOrderFile(List<OrderFileDataMolde> outPutDataList, string anOutputPath)
+        private static void OutPutOrderFile(List<OrderFileDataModel> outPutDataList, string anOutputPath)
         {
-            using (StreamWriter sr = new StreamWriter(@anOutputPath, false, ENCODING))
+            using (StreamWriter sr = new StreamWriter(anOutputPath, false, ENCODING))
             {
-                foreach (OrderFileDataMolde dataModel in outPutDataList)
+                foreach (OrderFileDataModel dataModel in outPutDataList)
                 {
                     sr.WriteLine(string.Format("{0},{1},{2},{3},{4}", dataModel.Id, dataModel.CustomerName, dataModel.ProductionName, dataModel.Quantity, dataModel.DateOfDelivery));
                 }
@@ -591,10 +599,12 @@ namespace jp.ktsystem.kadai201411.h_okita
             public string Id { get; set; }
 
             /// <summary>
-            /// 現在のインスタンスの受注IDを同じ型の別のオブジェクトの受注IDと比較し、現在のインスタンスの並べ替え順序での位置が、比較対象のオブジェクトと比べて前か、後か、または同じかを示す整数を返します。
+            /// 現在のインスタンスの受注IDを同じ型の別のオブジェクトの受注IDと比較し、
+            /// 現在のインスタンスの並べ替え順序での位置が、
+            /// 比較対象のオブジェクトと比べて前か、後か、または同じかを示す整数を返します。
             /// </summary>
             /// <param name="obj">インスタンスと比較するオブジェクト</param>
-            /// <returns>自分自身がobjより小さいときはマイナスの数、大きいときはプラスの数、同じときは0を返す</returns>
+            /// <returns>自身の受注IDがobjの受注IDより小さいときはマイナスの数、大きいときはプラスの数、同じときは0を返す</returns>
             public int CompareTo(object obj)
             {
                 BaseFileDataModel model = obj as BaseFileDataModel;
@@ -611,7 +621,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>
         /// 受注情報データモデル
         /// </summary>
-        private class OrderFileDataMolde : BaseFileDataModel
+        private class OrderFileDataModel : BaseFileDataModel
         {
             /// <summary>
             /// コンストラクタ
@@ -621,7 +631,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             /// <param name="productName">製品名</param>
             /// <param name="quantity">数量</param>
             /// <param name="dateOfDelivery">納期</param>
-            public OrderFileDataMolde(string id, string customerName, string productName, int quantity, string dateOfDelivery)
+            public OrderFileDataModel(string id, string customerName, string productName, int quantity, string dateOfDelivery)
                 : base(id)
             {
                 this.CustomerName = customerName;
@@ -666,14 +676,18 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>
         /// 生産指示情報データモデル
         /// </summary>
-        private class ProductFileDataModle : OrderFileDataMolde
+        private class ProductFileDataModel : OrderFileDataModel
         {
             /// <summary>
             /// コンストラクタ
             /// </summary>
             /// <param name="id">受注ID</param>
+            /// <param name="customerName">顧客名</param>
+            /// <param name="productName">製品名</param>
+            /// <param name="quantity">数量</param>
+            /// <param name="dateOfDelivery">納期</param>
             /// <param name="depositDate">入金日時</param>
-            public ProductFileDataModle(string id, string customerName, string productName, int quantity, string dateOfDelivery, DateTime depositDate)
+            public ProductFileDataModel(string id, string customerName, string productName, int quantity, string dateOfDelivery, DateTime depositDate)
                 : base(id, customerName, productName, quantity, dateOfDelivery)
             {
                 this.DepositDate = depositDate;
@@ -684,14 +698,15 @@ namespace jp.ktsystem.kadai201411.h_okita
         }
 
         /// <summary>
-        /// ProductFileDataModle用のIComparer
+        /// ProductFileDataModelソート用のIComparer実装クラス
         /// </summary>
-        private class ProductFileDataModleComparer : IComparer<ProductFileDataModle>
+        private class ProductFileDataModelComparer : IComparer<ProductFileDataModel>
         {
             /// <summary>
-            /// 入金日時の昇順、入金日時が同じ場合は受注IDの昇順
+            /// aの入金日時が早ければ負の数、遅ければ正の数
+            /// 一致していれば、受注IDのString.CompareToにて比較した値を返す
             /// </summary>
-            int IComparer<ProductFileDataModle>.Compare(ProductFileDataModle a, ProductFileDataModle b)
+            public int Compare(ProductFileDataModel a, ProductFileDataModel b)
             {
                 int res = a.DepositDate.CompareTo(b.DepositDate);
                 if (0 == res)
@@ -712,17 +727,17 @@ namespace jp.ktsystem.kadai201411.h_okita
             /// </summary>
             /// <param name="outPutProductOrderDataList">生産指示情報リスト</param>
             /// <param name="outPutOrderDataList">生産指示ファイルに出力しなかった受注情報リスト</param>
-            public ProductAndUnoutputOrderDataModel(List<ProductFileDataModle> outPutProductOrderDataList, List<OrderFileDataMolde> outPutOrderDataList)
+            public ProductAndUnoutputOrderDataModel(List<ProductFileDataModel> outPutProductOrderDataList, List<OrderFileDataModel> outPutOrderDataList)
             {
                 this.OutputProductionDataList = outPutProductOrderDataList;
                 this.OutputOrderDataList = outPutOrderDataList;
             }
 
             /// <summary>生産指示ファイルに出力しなかった受注情報リスト</summary>
-            public List<OrderFileDataMolde> OutputOrderDataList { get; set; }
+            public List<OrderFileDataModel> OutputOrderDataList { get; set; }
 
             /// <summary>生産指示情報リスト</summary>
-            public List<ProductFileDataModle> OutputProductionDataList { get; set; }
+            public List<ProductFileDataModel> OutputProductionDataList { get; set; }
         }
 
         /// <summary>
@@ -733,20 +748,20 @@ namespace jp.ktsystem.kadai201411.h_okita
             /// <summary>
             /// エラー番号
             /// </summary>
-            public int ErrorNo
+            public Constants.ErrorCode ErrorNo
             {
                 get
                 {
                     return _errorNo;
                 }
             }
-            private int _errorNo;
+            private Constants.ErrorCode _errorNo;
 
             /// <summary>
             /// コンストラクタ
             /// </summary>
             /// <param name="errorNo">エラー番号</param>
-            public CustomException(int errorNo)
+            public CustomException(Constants.ErrorCode errorNo)
             {
                 _errorNo = errorNo;
             }

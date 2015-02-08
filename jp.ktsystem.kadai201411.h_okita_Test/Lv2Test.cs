@@ -450,27 +450,27 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         {
             //前提となる退避ファイルがあればコピー
             string inputReservation = testFolderDir + INPUT_RESERVATION;
-            if (File.Exists(@inputReservation))
+            if (File.Exists(inputReservation))
             {
                 string reservationDir = Kadai.GetReservationFileDir();
                 if (!Directory.Exists(reservationDir))
                 {
-                    Directory.CreateDirectory(@reservationDir);
+                    Directory.CreateDirectory(reservationDir);
                 }
                 string reservationPath = reservationDir + "\\" + RESERVATION_FILE_NAME;
-                File.Copy(@inputReservation, @reservationPath, true);
+                File.Copy(inputReservation, reservationPath, true);
             }
             else
             {
                 string reservationDir = Kadai.GetReservationFileDir();
                 if (!Directory.Exists(reservationDir))
                 {
-                    Directory.CreateDirectory(@reservationDir);
+                    Directory.CreateDirectory(reservationDir);
                 }
                 string reservationPath = reservationDir + "\\" + RESERVATION_FILE_NAME;
                 if (File.Exists(reservationPath))
                 {
-                    File.Delete(@reservationPath);
+                    File.Delete(reservationPath);
                 }
             }
 
@@ -484,15 +484,15 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
             string backupDir = testFolderDir + OUTPUT_BACKUP_FOLDER;
 
             //対象メソッド実行
-            int result = Kadai.createProductOrder(@orderDir, @incomeDir, @productDir, @backupDir);
+            int result = Kadai.createProductOrder(orderDir, incomeDir, productDir, backupDir);
             //入力受注ファイルを元に戻す
             string anExBackupFolder = testFolderDir + EXPECTED_BACKUP_FOLDER;
-            string[] exBackupFiles = Directory.GetFiles(@anExBackupFolder, "*", System.IO.SearchOption.TopDirectoryOnly);
-            foreach (string @failPath in exBackupFiles)
+            string[] exBackupFiles = Directory.GetFiles(anExBackupFolder, "*", SearchOption.TopDirectoryOnly);
+            foreach (string failPath in exBackupFiles)
             {
                 string fileName = Path.GetFileName(failPath);
                 //ファイルのコピー
-                File.Copy(@failPath, @orderDir + "\\" + fileName, true);
+                File.Copy(failPath, orderDir + "\\" + fileName, true);
             }
 
             if (returnNo != result)
@@ -501,15 +501,15 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
             }
 
             string anOutputProductFilePath = productDir + "\\" + OUTPUT_FILE_NAME;
-            if (!File.Exists(@anOutputProductFilePath))
+            if (!File.Exists(anOutputProductFilePath))
             {
                 Assert.Fail("出力ファイルが存在しませんでした。");
             }
 
             //生産指示ファイル比較
             string anExpextedProductFilePath = testFolderDir + EXPECTED_PRODUCT_FOLDER + "\\" + OUTPUT_FILE_NAME;
-            FileStream fs1 = new FileStream(@anOutputProductFilePath, FileMode.Open);
-            FileStream fs2 = new FileStream(@anExpextedProductFilePath, FileMode.Open);
+            FileStream fs1 = new FileStream(anOutputProductFilePath, FileMode.Open);
+            FileStream fs2 = new FileStream(anExpextedProductFilePath, FileMode.Open);
             int byte1;
             int byte2;
             try
@@ -546,15 +546,15 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
 
             //バックアップファイル比較
             string anBackupFolder = testFolderDir + OUTPUT_BACKUP_FOLDER;
-            string[] backupFiles = Directory.GetFiles(@anBackupFolder, "*", System.IO.SearchOption.TopDirectoryOnly);
+            string[] backupFiles = Directory.GetFiles(anBackupFolder, "*", SearchOption.TopDirectoryOnly);
             if (backupFiles.Length != exBackupFiles.Length)
             {
                 Assert.Fail("バックアップファイル数が異なります。");
             }
             for (int i = 0; i < backupFiles.Length; i++)
             {
-                FileStream bfs1 = new FileStream(@backupFiles[i], FileMode.Open);
-                FileStream bfs2 = new FileStream(@exBackupFiles[i], FileMode.Open);
+                FileStream bfs1 = new FileStream(backupFiles[i], FileMode.Open);
+                FileStream bfs2 = new FileStream(exBackupFiles[i], FileMode.Open);
                 int bbyte1;
                 int bbyte2;
                 try
@@ -602,8 +602,8 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
                 }
             }
 
-            fs1 = new FileStream(@reservation, FileMode.Open);
-            fs2 = new FileStream(@exReservation, FileMode.Open);
+            fs1 = new FileStream(reservation, FileMode.Open);
+            fs2 = new FileStream(exReservation, FileMode.Open);
             try
             {
                 if (fs1.Length == fs2.Length)
