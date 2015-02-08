@@ -116,7 +116,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <param name="anOutputDir">出力ディレクトリ</param>
         /// <param name="aBackupDir">バックアップファイル出力ディレクトリ</param>
         /// <returns>出力したレコードの件数（異常終了の場合はエラーコード）</returns>
-        public static int createProductOrder(String anOrderFileDir, String anIncomeFileDir, String anOutputDir, String aBackupDir)
+        public static int CreateProductOrder(String anOrderFileDir, String anIncomeFileDir, String anOutputDir, String aBackupDir)
         {
             //受注情報ファイル入力ディレクトリの存在チェック
             if (string.IsNullOrEmpty(anOrderFileDir) || !Directory.Exists(@anOrderFileDir))

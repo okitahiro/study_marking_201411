@@ -484,7 +484,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
             string backupDir = testFolderDir + OUTPUT_BACKUP_FOLDER;
 
             //対象メソッド実行
-            int result = Kadai.createProductOrder(@orderDir, @incomeDir, @productDir, @backupDir);
+            int result = Kadai.CreateProductOrder(@orderDir, @incomeDir, @productDir, @backupDir);
             //入力受注ファイルを元に戻す
             string anExBackupFolder = testFolderDir + EXPECTED_BACKUP_FOLDER;
             string[] exBackupFiles = Directory.GetFiles(@anExBackupFolder, "*", System.IO.SearchOption.TopDirectoryOnly);
@@ -647,7 +647,7 @@ namespace jp.ktsystem.kadai201411.h_okita_Test
         /// <param name="errorCode">エラーコード</param>
         private void AssertFail(string orderDir, string incomeDir, string productDir, string backupDir, int returnNo)
         {
-            int result = Kadai.createProductOrder(orderDir, incomeDir, productDir, backupDir);
+            int result = Kadai.CreateProductOrder(orderDir, incomeDir, productDir, backupDir);
             if (returnNo != result)
             {
                 Assert.Fail(string.Format("戻り値は{0}であることが期待されましたが{1}が返されました。", returnNo, result));
