@@ -302,6 +302,20 @@ namespace jp.ktsystem.kadai201411.h_okita
                 //ファイル読み込み
                 for (i = 0; i < files.Count; i++)
                 {
+
+                    // UTF8コードチェック
+                    if (!IsUTF8Code(files[i]))
+                    {
+                        if (existsReservation && 0 == i)
+                        {
+                            throw new CustomException(Constants.INPUT_ERROR_OF_RESERVATION_FILE);
+                        }
+                        else
+                        {
+                            throw new CustomException(Constants.INPUT_ERROR_OF_ORDER_FILE);
+                        }
+                    }
+
                     using (StreamReader sr = new StreamReader(files[i], ENCODING))
                     {
                         //ストリームの末尾まで繰り返す
@@ -309,6 +323,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                         {
                             //ファイルから一行読み込む
                             string line = sr.ReadLine();
+
+
                             //読み込んだ一行をカンマ毎に分けて配列に格納する
                             string[] values = line.Split(',');
 
@@ -442,6 +458,12 @@ namespace jp.ktsystem.kadai201411.h_okita
                 return incomeDataList;
             }
 
+            // UTF8コードチェック
+            if (!IsUTF8Code(filePath))
+            {
+                throw new CustomException(Constants.INPUT_ERROR_OF_INCOME_FILE);
+            }
+
             //ファイル読み込み
             using (StreamReader sr = new StreamReader(filePath, ENCODING))
             {
@@ -450,6 +472,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 {
                     //ファイルから一行読み込む
                     string line = sr.ReadLine();
+
                     //読み込んだ一行をカンマ毎に分けて配列に格納する
                     string[] values = line.Split(',');
 
@@ -765,6 +788,152 @@ namespace jp.ktsystem.kadai201411.h_okita
             {
                 _errorNo = errorNo;
             }
+        }
+
+        // 文字コード（改行）
+		public static readonly int N_CODE = 0x0A;
+		// 文字コード（キャリッジリターン）
+        public static readonly int R_CODE = 0x0D;
+
+        /// <summary>
+        /// ファイルのバイト配列が改行、キャリッジリターン以外の制御文字を含まないUTF8コードのみで作成されているかどうかを判定する
+        /// ※）UTF8用関数
+        /// </summary>
+        /// <param name="url">ファイルパス</param>
+        /// <returns>UTF8コードのみ：true、それ以外：false</returns>
+        private static bool IsUTF8Code(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return true;
+            }
+
+            byte[] data = null;
+            using (FileStream fs = new FileStream(url, FileMode.Open, FileAccess.Read))
+            {
+                data = new byte[fs.Length];
+                fs.Read(data, 0, data.Length);
+            }
+
+            //byte[] data = ENCODING.GetBytes(str);
+            for(int i = 0; i < data.Count(); i++)
+            {
+                byte firstB = data[i];
+
+                if (0x00 <= firstB && 0x7f >= firstB)
+                {
+                    // 1バイト文字
+
+                    // 1バイト制御文字
+                    if ((0x00 <= firstB && 0x1f >= firstB) || (0x7F == firstB))
+                    {
+                        if (N_CODE != firstB && R_CODE != firstB)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if ((0xc0 <= firstB && 0xcf >= firstB) || (0xd0 <= firstB && 0xdf >= firstB))
+                {
+                    // 2バイト文字
+                    if (i >= data.Count() - 1)
+                    {
+                        return false;
+                    }
+                    i++;
+                    byte secondB = data[i];
+                    // 2バイト制御文字
+                    if (0xc2 == firstB)
+                    {
+                        if (0x80 <= secondB && 0xcf >= 0xa0)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (!IsUTF8CodeAfterFirstByte(secondB))
+                    {
+                        return false;
+                    }
+                }
+                else if (0xe0 <= firstB && 0xef >= firstB)
+                {
+                    // 3バイト文字
+                    if (!IsUTF8NByteChar(3, i, data))
+                    {
+                        return false;
+                    }
+                    i += 3 - 1;
+                }
+                else if (0xf0 <= firstB && 0xf7 >= firstB)
+                {
+                    // 4バイト文字
+                    if (!IsUTF8NByteChar(4, i, data))
+                    {
+                        return false;
+                    }
+                    i += 4 - 1;
+                }
+                else if (0xf8 <= firstB && 0xfb >= firstB)
+                {
+                    // 5バイト文字
+                    if (!IsUTF8NByteChar(5, i, data))
+                    {
+                        return false;
+                    }
+                    i += 5 - 1;
+                }
+                else if (0xfc <= firstB && 0xff >= firstB)
+                {
+                    // 6バイト文字
+                    if (!IsUTF8NByteChar(6, i, data))
+                    {
+                        return false;
+                    }
+                    i += 6 - 1;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// UTF8の多バイト文字の2バイト以降が適正かどうか判断する
+        /// ※）UTF8用関数
+        /// </summary>
+        /// <param name="n">UTF8文字が何バイトかどうかを指定する</param>
+        /// <param name="i">チェックするバイト配列中の現在のインデックス</param>
+        /// <param name="data">チェックするバイト配列</param>
+        /// <returns>UTF8の多バイト文字として適正である：true、適正ではない：false</returns>
+        private static bool IsUTF8NByteChar(int n, int i, byte[] data)
+        {
+            if (i >= data.Count() - (n-1))
+            {
+                return false;
+            }
+
+            for (int j = 1; j < n; j++)
+            {
+                if (!IsUTF8CodeAfterFirstByte(data[i+j]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// UTF8の多バイト文字の２バイト目以降のバイトかどうか判定する
+        /// ※）UTF8用関数
+        /// </summary>
+        /// <param name="b">判定するバイト</param>
+        /// <returns>UTF8の多バイト文字の２バイト目以降のバイト：true、それ以外：false</returns>
+        private static bool IsUTF8CodeAfterFirstByte(byte b)
+        {
+            return ((0x80 <= b && 0x8f >= b) || (0x90 <= b && 0x9f >= b) || (0xa0 <= b && 0xaf >= b) || (0xb0 <= b && 0xbf >= b));
         }
     }
 }
