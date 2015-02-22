@@ -308,11 +308,11 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         if (existsReservation && 0 == i)
                         {
-                            throw new CustomException(Constants.INPUT_ERROR_OF_RESERVATION_FILE);
+                            throw new CustomException(Constants.ErrorCode.INPUT_ERROR_OF_RESERVATION_FILE);
                         }
                         else
                         {
-                            throw new CustomException(Constants.INPUT_ERROR_OF_ORDER_FILE);
+                            throw new CustomException(Constants.ErrorCode.INPUT_ERROR_OF_ORDER_FILE);
                         }
                     }
 
@@ -461,7 +461,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             // UTF8コードチェック
             if (!IsUTF8Code(filePath))
             {
-                throw new CustomException(Constants.INPUT_ERROR_OF_INCOME_FILE);
+                throw new CustomException(Constants.ErrorCode.INPUT_ERROR_OF_INCOME_FILE);
             }
 
             //ファイル読み込み
