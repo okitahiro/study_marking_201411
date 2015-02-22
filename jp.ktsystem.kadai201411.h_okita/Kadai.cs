@@ -86,7 +86,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 //入力フォルダ内のファイル一覧取得
                 List<string> inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
-                inputFiles.Sort(StringComparer.InvariantCulture);
+                inputFiles.Sort(new OrderFileCompare());
 
                 //受注情報のリストを取得
                 orderDataList = GetOrderFileData(inputFiles, false);
@@ -161,7 +161,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                 //受注情報フォルダ内の受注情報ファイル一覧取得
                 inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
-                inputFiles.Sort(StringComparer.InvariantCulture);
+                inputFiles.Sort(new OrderFileCompare());
 
                 //退避ファイルパス取得
                 string reservationFileDir = Path.Combine(GetReservationFileDir(), RESERVATION_FILE_NAME);
@@ -934,6 +934,39 @@ namespace jp.ktsystem.kadai201411.h_okita
         private static bool IsUTF8CodeAfterFirstByte(byte b)
         {
             return ((0x80 <= b && 0x8f >= b) || (0x90 <= b && 0x9f >= b) || (0xa0 <= b && 0xaf >= b) || (0xb0 <= b && 0xbf >= b));
+        }
+
+        /// <summary>
+        /// 受注ファイルのソート用IComparer実装クラス
+        /// </summary>
+        private class OrderFileCompare : IComparer<string>
+        {
+            /// <summary>
+            /// 文字列aと文字列bを大文字に変換し、
+            /// String.CompareToメソッドにより比較し、
+            /// 結果が0以外の場合は、そのまま値を返す。
+            /// 結果が0の場合は、大文字変換前の文字列を
+            /// はじめの文字から順にASCIIコードで比較し、
+            /// その差を返す
+            /// </summary>
+            public int Compare(string a, string b)
+            {
+                string upperA = a.ToUpper();
+                string upperB = b.ToUpper();
+                int res = upperA.CompareTo(upperB);
+                if (res == 0)
+                {
+                    for (int i = 0; i < a.Length; i++)
+                    {
+                        int dif = a[i] - b[i];
+                        if (dif != 0)
+                        {
+                            return dif;
+                        }
+                    }
+                }
+                return res;
+            }
         }
     }
 }
