@@ -59,6 +59,11 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>入金情報ファイルの正規表現入金日時フォーマット</summary>
         private static readonly string DESPOSIT_OF_INCOME_REG_FORMAT = @"^(?<year>[0-9]{4})(?<month>0?[1-9]|1[012])(?<day>0?[1-9]|[12][0-9]|3[01])(?<hour>0?[1-9]|1[0-9]|2[0-3])(?<minute>0?[1-9]|[1-5][0-9])(?<second>0?[1-9]|[1-5][0-9])$";
 
+        // 文字コード（改行）
+        public static readonly int N_CODE = 0x0A;
+        // 文字コード（キャリッジリターン）
+        public static readonly int R_CODE = 0x0D;
+
         /// <summary>
         /// 問１ 受注情報に存在する製品と受注数量の一覧を出力する
         /// </summary>
@@ -214,7 +219,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             try
             {
                 //生産指示出力
-                OututProductOrderFile(resultData.OutputProductionDataList, Path.Combine(anOutputDir, PRODUCT_ORDER_FILE_NAME));
+                OutputProductOrderFile(resultData.OutputProductionDataList, Path.Combine(anOutputDir, PRODUCT_ORDER_FILE_NAME));
             }
             catch
             {
@@ -446,7 +451,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>
         /// 指定された入金情報ファイルから、入金情報のリストを取得する
         /// </summary>
-        /// <param name="file">入金ファイルパス</param>
+        /// <param name="filePath">入金ファイルパス</param>
         /// <returns>入金情報のリスト（エラーが発生し処理が中断した場合は、nullが返る）</returns>
         private static List<IncomeFileDataModel> GetIncomeFileData(string filePath)
         {
@@ -527,7 +532,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>
         /// 生産指示情報及び、生産指示ファイルに出力しなかった受注情報を取得する
         /// </summary>
-        /// <param name="orderData">受注情報</param>
+        /// <param name="orderDataList">受注情報</param>
         /// <param name="incomeDataMap">入金情報</param>
         /// <returns>生産指示情報及び、生産指示ファイルに出力しなかった受注情報</returns>
         private static ProductAndUnoutputOrderDataModel GetProductDataAndUnOutputOrderData(List<OrderFileDataModel> orderDataList, Dictionary<string, DateTime> incomeDataMap)
@@ -556,9 +561,9 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>
         /// 生産指示情報の一覧を上書き出力する
         /// </summary>
-        /// <param name="orderFileDataList">受注情報データリスト</param>
+        /// <param name="productDataList">生産指示情報データリスト</param>
         /// <param name="anOutputPath">出力ファイルパス</param>
-        private static void OututProductOrderFile(List<ProductFileDataModel> productDataList, string anOutputPath)
+        private static void OutputProductOrderFile(List<ProductFileDataModel> productDataList, string anOutputPath)
         {
             using (StreamWriter sr = new StreamWriter(anOutputPath, false, ENCODING))
             {
@@ -790,11 +795,6 @@ namespace jp.ktsystem.kadai201411.h_okita
             }
         }
 
-        // 文字コード（改行）
-		public static readonly int N_CODE = 0x0A;
-		// 文字コード（キャリッジリターン）
-        public static readonly int R_CODE = 0x0D;
-
         /// <summary>
         /// ファイルのバイト配列が改行、キャリッジリターン以外の制御文字を含まないUTF8コードのみで作成されているかどうかを判定する
         /// ※）UTF8用関数
@@ -816,7 +816,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             }
 
             //byte[] data = ENCODING.GetBytes(str);
-            for(int i = 0; i < data.Count(); i++)
+            for (int i = 0; i < data.Count(); )
             {
                 byte firstB = data[i];
 
@@ -832,6 +832,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                             return false;
                         }
                     }
+
+                    i += 1;
                 }
                 else if ((0xc0 <= firstB && 0xcf >= firstB) || (0xd0 <= firstB && 0xdf >= firstB))
                 {
@@ -840,12 +842,11 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
-                    i++;
-                    byte secondB = data[i];
+                    byte secondB = data[i + 1];
                     // 2バイト制御文字
                     if (0xc2 == firstB)
                     {
-                        if (0x80 <= secondB && 0xcf >= 0xa0)
+                        if (0x80 <= secondB && 0xa0 >= secondB)
                         {
                             return false;
                         }
@@ -855,6 +856,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
+
+                    i += 2;
                 }
                 else if (0xe0 <= firstB && 0xef >= firstB)
                 {
@@ -863,7 +866,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
-                    i += 3 - 1;
+
+                    i += 3;
                 }
                 else if (0xf0 <= firstB && 0xf7 >= firstB)
                 {
@@ -872,7 +876,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
-                    i += 4 - 1;
+
+                    i += 4;
                 }
                 else if (0xf8 <= firstB && 0xfb >= firstB)
                 {
@@ -881,7 +886,8 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
-                    i += 5 - 1;
+
+                    i += 5;
                 }
                 else if (0xfc <= firstB && 0xff >= firstB)
                 {
@@ -890,7 +896,7 @@ namespace jp.ktsystem.kadai201411.h_okita
                     {
                         return false;
                     }
-                    i += 6 - 1;
+                    i += 6;
                 }
                 else
                 {
@@ -910,14 +916,14 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <returns>UTF8の多バイト文字として適正である：true、適正ではない：false</returns>
         private static bool IsUTF8NByteChar(int n, int i, byte[] data)
         {
-            if (i >= data.Count() - (n-1))
+            if (i >= data.Count() - (n - 1))
             {
                 return false;
             }
 
             for (int j = 1; j < n; j++)
             {
-                if (!IsUTF8CodeAfterFirstByte(data[i+j]))
+                if (!IsUTF8CodeAfterFirstByte(data[i + j]))
                 {
                     return false;
                 }
@@ -933,7 +939,7 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <returns>UTF8の多バイト文字の２バイト目以降のバイト：true、それ以外：false</returns>
         private static bool IsUTF8CodeAfterFirstByte(byte b)
         {
-            return ((0x80 <= b && 0x8f >= b) || (0x90 <= b && 0x9f >= b) || (0xa0 <= b && 0xaf >= b) || (0xb0 <= b && 0xbf >= b));
+            return (0x80 <= b && 0xbf >= b);
         }
 
         /// <summary>
