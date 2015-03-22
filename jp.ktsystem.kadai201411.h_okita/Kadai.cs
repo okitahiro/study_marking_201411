@@ -59,10 +59,17 @@ namespace jp.ktsystem.kadai201411.h_okita
         /// <summary>入金情報ファイルの正規表現入金日時フォーマット</summary>
         private static readonly string DESPOSIT_OF_INCOME_REG_FORMAT = @"^(?<year>[0-9]{4})(?<month>0?[1-9]|1[012])(?<day>0?[1-9]|[12][0-9]|3[01])(?<hour>0?[1-9]|1[0-9]|2[0-3])(?<minute>0?[1-9]|[1-5][0-9])(?<second>0?[1-9]|[1-5][0-9])$";
 
+
         // 文字コード（改行）
         public static readonly int N_CODE = 0x0A;
         // 文字コード（キャリッジリターン）
         public static readonly int R_CODE = 0x0D;
+
+        /// <summary>入力フォルダ内の受注情報ファイル名のフォーマット</summary>
+        private static readonly string ORDER_FILE_NAME_FORMAT = "order*.txt";
+
+        /// <summary>IsHalfNumberメソッド内で使用する正規表現のパターン</summary>
+        private static readonly string ONLY_NUMBER_REGEX = @"^[0-9]+$";
 
         /// <summary>
         /// 問１ 受注情報に存在する製品と受注数量の一覧を出力する
@@ -89,7 +96,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             try
             {
                 //入力フォルダ内のファイル一覧取得
-                List<string> inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
+                List<string> inputFiles = Directory.GetFiles(anOrderFileDir, ORDER_FILE_NAME_FORMAT, SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
                 inputFiles.Sort(new OrderFileCompare());
 
@@ -164,7 +171,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             try
             {
                 //受注情報フォルダ内の受注情報ファイル一覧取得
-                inputFiles = Directory.GetFiles(anOrderFileDir, "order*.txt", SearchOption.TopDirectoryOnly).ToList();
+                inputFiles = Directory.GetFiles(anOrderFileDir, ORDER_FILE_NAME_FORMAT, SearchOption.TopDirectoryOnly).ToList();
                 //ファイル名のソート
                 inputFiles.Sort(new OrderFileCompare());
 
@@ -287,7 +294,7 @@ namespace jp.ktsystem.kadai201411.h_okita
             {
                 return false;
             }
-            return Regex.IsMatch(str, @"^[0-9]+$");
+            return Regex.IsMatch(str, ONLY_NUMBER_REGEX);
         }
 
         /// <summary>
